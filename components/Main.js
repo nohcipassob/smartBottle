@@ -9,24 +9,39 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import WavyBackground from 'react-native-wavy-background'
 import { LinearGradient } from 'react-native-svg';
 import Dialog from "react-native-dialog";
+import axios from 'axios';
 
 let glass = 0;
 let maxGlasses = 8;
+let dailyCount = 0;
 const Show = () => {
+    const [data, setData]= useState(null)
+    useEffect(() => {
+        fetch('https://water-bottle.herokuapp.com/get/John')
+            .then(response => response.json())
+            .then(result => {
+                setData(result.Result.John);
+                console.log(result.Result.John);
+            })
+            .catch(error => console.error(error));
+    }, []);
+   dailyCount = data ? Object.keys(data.daily).length : 0;
     return (
         <View style={styles.topPosition}>
             <Ionicons name="water-outline" style={{ fontSize: 225, color: '#008fc8', marginTop: 40, }}></Ionicons>
-            <Text style={styles.Text}> {glass} / {maxGlasses} glasses  |   20 hrs left</Text>
+            <Text style={styles.Text}> {dailyCount} / {maxGlasses} glasses  |   20 hrs left</Text>
 
         </View>
     )
 }
 const Show2 = () => {
     const [icons, setIcons] = useState([]);
-   
-
     const [visible, setVisible] = useState(false);
     const [glasses, setGlasses] = useState(0)
+    const timestamp = Date.now() + 25200000; // add 7 hours in milliseconds
+    const [data, setData]= useState(null)
+    
+   
     const showDialog = () => {
         setVisible(true);
     };
@@ -41,7 +56,27 @@ const Show2 = () => {
         glass += glasses;
         setVisible(false);
     };
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const ml = glasses *200;
+        axios.post('https://water-bottle.herokuapp.com/daily', {
+          firstName: "John",
+          drunk: ml,
+          temp: "0",
+          time: timestamp
+        })
+        .then((response) => {
+          console.log(response.data);
+          // do something with the response, e.g. show a success message
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          // show an error message
+        });
+        setVisible(false);
+      };
+    
+    
     const addGlasses = () => {
         setGlasses(glasses + 1);
     };
@@ -58,9 +93,10 @@ const Show2 = () => {
         glass = 0;
     }
     useEffect(() => {
+       
         const intervalId = setInterval(() => {
             if (icons.length < maxGlasses) {
-                const newIcon = icons.length < glass
+                const newIcon = icons.length < dailyCount
                     ? <MaterialCommunityIcons name="cup" color='white' style={{ fontSize: 40, marginTop: 20, marginLeft: 4 }} />
                     : <MaterialCommunityIcons name="cup" color='white' style={{ fontSize: 40, marginTop: 20, marginLeft: 4, opacity: 0.6 }} />;
                 setIcons(prevIcons => [...prevIcons, newIcon]);
@@ -121,7 +157,7 @@ const Show2 = () => {
                             </View>
                             <Dialog.Button label="Reset" onPress={handleReset} />
                             <Dialog.Button label="Cancel" onPress={handleCancel} />
-                            <Dialog.Button label="OK" onPress={handleOK} />
+                            <Dialog.Button label="OK" onPress={handleSubmit} />
 
                         </Dialog.Container>
                     </View>

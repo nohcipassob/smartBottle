@@ -9,23 +9,7 @@ import WaterIcon from './components/WaterIcon';
 import Daily from './components/Daily'
 import Test from './components/Test'
 import Profile from './components/Profile'
-function Home() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'pink' }}>
-      <Text style={{fontSize:40}}>Home!</Text>
-    </View>
-  );
-}
-
-function Setting() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#50bafe' }}>
-      <Text style={{fontSize:40}}>Setting!</Text>
-    </View>
-  );
-}
-
-
+import Chart from './components/Chart'
 
 const Tab = createBottomTabNavigator();
 
@@ -67,6 +51,18 @@ function MyTabs() {
         
         }}
       />
+       <Tab.Screen
+        name="xx"
+        component={Chart}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'profile',
+          tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        
+        }}
+      />
       <Tab.Screen
         name="zz"
         component={Profile}
@@ -79,6 +75,7 @@ function MyTabs() {
         
         }}
       />
+     
     </Tab.Navigator>
   );
 }

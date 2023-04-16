@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, Fla } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, TextInput, Button } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { Image } from 'react-native';
@@ -22,6 +22,12 @@ const Profile = () => {
     useEffect(() => {
         console.log(data);
     }, [data]);
+    const weight = parseFloat(data.weight);
+    const heightInCm = parseFloat(data.height);
+    const heightInM = heightInCm / 100; // Convert height from cm to m
+    const bmi = weight / (heightInM * heightInM);
+    const [editable, setEditable] = useState(false);
+    const waterAmout = parseFloat(data.weight) * 33;
     return (
         <View style={styles.container}>
             <View style={styles.top}>
@@ -51,27 +57,53 @@ const Profile = () => {
 
                 </View>
                 <View>
-                    <View style={{ flexDirection: 'row' ,margin:10}}>
+                    <View style={{ flexDirection: 'row', margin: 10 }}>
                         <MaterialCommunityIcons name="cake-variant-outline" size={26} color="black" />
                         <Text style={styles.subHeader}>  22 July, 2001 </Text>
                     </View>
-                    <Divider/>
-                    <View style={{ flexDirection: 'row' ,margin:10}}>
-                    <MaterialCommunityIcons name="face-man" size={26} color="black" />
+                    <Divider />
+                    <View style={{ flexDirection: 'row', margin: 10 }}>
+                        <MaterialCommunityIcons name="face-man" size={26} color="black" />
                         <Text style={styles.subHeader}>  {data.gender}</Text>
                     </View>
-                    <Divider/>
-                    <View style={{ flexDirection: 'row',margin:10 }}>
-                    <MaterialCommunityIcons name="human-male-height" size={26} color="black" />
-                        <Text style={styles.subHeader}>  {data.weight} kg  {data.height} cm</Text>
+                    <Divider />
+                    <View style={{ flexDirection: 'row', margin: 10, justifyContent:'space-around' }}>
+                        <MaterialCommunityIcons name="human-male-height" size={26} color="black" />
+                        <TextInput
+                            style={styles.subHeader}
+                            editable={editable}
+                            keyboardType="numeric"
+                            value={data.weight}
+                            onChangeText={(text) => setData({ ...data, weight: text })}
+                        />
+                        <Text style={styles.subHeader}>kg</Text>
+                        <TextInput
+                            style={styles.subHeader}
+                            editable={editable}
+                            keyboardType="numeric"
+                            value={data.height}
+                            onChangeText={(text) => setData({ ...data, height: text })}
+                        />
+                        <Text style={styles.subHeader}>cm</Text>
+                        
+                            <Button title={editable ? 'Save' : 'Edit'} onPress={() => setEditable(!editable)} />
+                      
                     </View>
-                    <Divider/>
+                    <Divider />
+
+
+
+                    <View style={{ flexDirection: 'row', margin: 10 }}>
+                        <MaterialCommunityIcons name="water-check-outline" size={26} color="black" />
+                        <Text style={styles.subHeader}>  your BMI is: {bmi.toFixed(2)}</Text>
+                    </View>
+                    <Divider />
                     <Text style={[styles.subHeader]}> Water taking per day</Text>
-                    <View style={{ flexDirection: 'row',margin:10 }}>
-                    <MaterialCommunityIcons name="water-check-outline" size={26} color="black" />
-                        <Text style={styles.subHeader}>  {data.waterAmount} </Text>
+                    <View style={{ flexDirection: 'row', margin: 10 }}>
+                        <MaterialCommunityIcons name="water-check-outline" size={26} color="black" />
+                        <Text style={styles.subHeader}>  {waterAmout} ml </Text>
                     </View>
-                    <Divider/>
+                    <Divider />
                 </View>
             </View>
         </View>
