@@ -198,7 +198,10 @@ const Main = () => {
 
             </View>
             <View style={{ position: 'absolute', zIndex: 1 }}>
-                <FAB style={{ top: 330, left: 320 }} onPress={handlePress} />
+              <TouchableOpacity style={{top: 330, left: 320, width: 60, height:60, backgroundColor:"#ffaa76", borderRadius: 30}}
+                onPress={handlePress}>
+                <Text style={{fontSize: 40, color:"white", justifyContent:'center' , textAlign:'center'}}>+</Text>
+              </TouchableOpacity>
             </View>
             <ScrollView style={styles.bottom} >
 
