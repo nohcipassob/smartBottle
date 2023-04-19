@@ -1,19 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
+import { Dimensions, ActivityIndicator, View} from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const screenWidth = Dimensions.get('window').width;
 
-const data = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-  datasets: [
-    {
-      data: [20, 45, 28, 80, 99, 43],
-      color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
-      strokeWidth: 2,
-    },
-  ],
-};
+
+
 
 const chartConfig = {
   backgroundColor: '#FFFFFF',
@@ -24,19 +18,61 @@ const chartConfig = {
   style: {
     borderRadius: 16,
   },
+
 };
 
 const Chart = () => {
-  return (
-    <LineChart
-      data={data}
-      width={screenWidth}
-      height={220}
-      chartConfig={chartConfig}
-      bezier
-      style={{ marginVertical: 8, borderRadius: 16 }}
-    />
-  );
-};
+  const isFocused = useIsFocused();
+  const [daily, setDaily] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if(isFocused){
+    fetch('https://water-bottle.herokuapp.com/get/John')
+      .then(response => response.json())
+      .then(result => {
+        setDaily(result.Result.John.daily);
+        console.log(daily);
+        setIsLoading(false);
+      })
+      .catch(error => console.error(error));
+    }
+  }, [isFocused]);
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  const data = Object.entries(daily).map(([timestamp, values]) => ({
+    timestamp,
+    drunk: values.drunk
+  }));
+  data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+  const labels = data.map(item => item.timestamp.substr(11, 5));
+  const drunkValues = data.map(item => item.drunk);
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        data: drunkValues,
+        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        strokeWidth: 3,
+      },
+    ],
+  };
+  
+    return (
+      <LineChart
+        data={chartData}
+        width={screenWidth}
+        height={300}
+        chartConfig={chartConfig}
+        bezier
+        style={{ marginVertical: 8, borderRadius: 16 }}
+      />
+    );
+  }
+
+
 
 export default Chart;

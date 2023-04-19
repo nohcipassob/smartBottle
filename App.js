@@ -34,11 +34,14 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Profile Screen"
+        name="daily"
         component={Daily}
         options={{
           headerShown: false,
-          tabBarLabel: 'Profile',
+          tabBarLabel: 'Daily',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="calendar-today" color={color} size={size} />
+            ),
          
         }}
       />
@@ -58,7 +61,7 @@ function MyTabs() {
           headerShown: false,
           tabBarLabel: 'profile',
           tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="account" color={color} size={size} />
+          <MaterialCommunityIcons name="chart-line-variant" color={color} size={size} />
           ),
         
         }}
