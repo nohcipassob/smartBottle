@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "726221937820",
+    "project_id": "push-8d660",
+    "storage_bucket": "push-8d660.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726221937820:android:36d27978cabaee0087e159",
+        "android_client_info": {
+          "package_name": "com.smartwater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726221937820-5qmh7m9reap0amn9sn8nhegrgib54um7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnff9tq1ZK2FwkRdUuBj11faUrCmOsjKY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726221937820-5qmh7m9reap0amn9sn8nhegrgib54um7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

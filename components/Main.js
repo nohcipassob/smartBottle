@@ -10,12 +10,33 @@ import WavyBackground from 'react-native-wavy-background'
 import { LinearGradient } from 'react-native-svg';
 import Dialog from "react-native-dialog";
 import axios from 'axios';
+import moment from 'moment';
 
 let glass = 0;
 let maxGlasses = 8;
 let dailyCount = 0;
 const Show = () => {
-    const [data, setData]= useState(null)
+    const [currentTime, setCurrentTime] = useState('');
+    const [timeRemaining, setTimeRemaining] = useState('');
+
+    useEffect(() => {
+        // Update the current time every second
+        const interval = setInterval(() => {
+          setCurrentTime(moment().format('hh:mm A'));
+        }, 1000);
+    
+        // Calculate the time remaining until 11:00 PM
+        const endTime = moment('24:00:00', 'HH:mm:ss');
+        const duration = moment.duration(endTime.diff(moment()));
+        const hoursLeft = Math.floor(duration.asHours());
+        const minutesLeft = Math.floor(duration.asMinutes() % 60);
+        setTimeRemaining(`${hoursLeft} hours and ${minutesLeft} minutes left`);
+    
+        // Clear the interval when the component unmounts
+        return () => clearInterval(interval);
+      }, []);
+
+    const [data, setData] = useState(null)
     useEffect(() => {
         fetch('https://water-bottle.herokuapp.com/get/John')
             .then(response => response.json())
@@ -25,23 +46,25 @@ const Show = () => {
             })
             .catch(error => console.error(error));
     }, []);
-   dailyCount = data ? Object.keys(data.daily).length : 0;
+    dailyCount = data ? Object.keys(data.daily).length : 0;
     return (
         <View style={styles.topPosition}>
             <Ionicons name="water-outline" style={{ fontSize: 225, color: '#008fc8', marginTop: 40, }}></Ionicons>
-            <Text style={styles.Text}> {dailyCount} / {maxGlasses} glasses  |   20 hrs left</Text>
+            <Text style={styles.Text}> {dailyCount} / {maxGlasses} glasses    </Text>
+            <Text style={styles.Text}> {timeRemaining}</Text>
 
         </View>
     )
 }
+export { dailyCount }
 const Show2 = () => {
     const [icons, setIcons] = useState([]);
     const [visible, setVisible] = useState(false);
     const [glasses, setGlasses] = useState(0)
     const timestamp = Date.now() + 25200000; // add 7 hours in milliseconds
-    const [data, setData]= useState(null)
-    
-   
+    const [data, setData] = useState(null)
+
+
     const showDialog = () => {
         setVisible(true);
     };
@@ -58,25 +81,25 @@ const Show2 = () => {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        const ml = glasses *200;
+        const ml = glasses * 200;
         axios.post('https://water-bottle.herokuapp.com/daily', {
-          firstName: "John",
-          drunk: ml,
-          temp: "0",
-          time: timestamp
+            firstName: "John",
+            drunk: ml,
+            temp: "0",
+            time: timestamp
         })
-        .then((response) => {
-          console.log(response.data);
-          // do something with the response, e.g. show a success message
-        })
-        .catch((error) => {
-          console.log(error.response.data);
-          // show an error message
-        });
+            .then((response) => {
+                console.log(response.data);
+                // do something with the response, e.g. show a success message
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                // show an error message
+            });
         setVisible(false);
-      };
-    
-    
+    };
+
+
     const addGlasses = () => {
         setGlasses(glasses + 1);
     };
@@ -93,7 +116,7 @@ const Show2 = () => {
         glass = 0;
     }
     useEffect(() => {
-       
+
         const intervalId = setInterval(() => {
             if (icons.length < maxGlasses) {
                 const newIcon = icons.length < dailyCount
@@ -184,7 +207,7 @@ const Main = () => {
             .catch(error => console.error(error));
     }, []);
 
-   
+
 
 
     console.log(active)
@@ -198,10 +221,10 @@ const Main = () => {
 
             </View>
             <View style={{ position: 'absolute', zIndex: 1 }}>
-              <TouchableOpacity style={{top: 330, left: 320, width: 60, height:60, backgroundColor:"#ffaa76", borderRadius: 30}}
-                onPress={handlePress}>
-                <Text style={{fontSize: 40, color:"white", justifyContent:'center' , textAlign:'center'}}>+</Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={{ top: 330, left: 320, width: 60, height: 60, backgroundColor: "#ffaa76", borderRadius: 30 }}
+                    onPress={handlePress}>
+                    <Text style={{ fontSize: 40, color: "white", justifyContent: 'center', textAlign: 'center' }}>+</Text>
+                </TouchableOpacity>
             </View>
             <ScrollView style={styles.bottom} >
 
@@ -214,7 +237,7 @@ const Main = () => {
                         <WaterIcon />
                         <ListItem.Content>
                             <ListItem.Subtitle>{date}</ListItem.Subtitle>
-                            <ListItem.Title style={styles.Text}>{parseInt(data.drunk/200)} glasses ≈ {data.drunk} ml </ListItem.Title>
+                            <ListItem.Title style={styles.Text}>{parseInt(data.drunk / 200)} glasses ≈ {data.drunk} ml </ListItem.Title>
                             <ListItem.Subtitle> {data.temp} °C</ListItem.Subtitle>
                         </ListItem.Content>
                     </ListItem>

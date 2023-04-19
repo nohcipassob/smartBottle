@@ -5,6 +5,7 @@ import { Image } from 'react-native';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { FlatList } from 'react-native';
 import { Divider } from '@rneui/themed';
+import WavyBackground from 'react-native-wavy-background'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height
@@ -30,13 +31,30 @@ const Profile = () => {
     const waterAmout = parseFloat(data.weight) * 33;
     return (
         <View style={styles.container}>
-            <View style={styles.top}>
+            <View >
+                <View
+                    style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                    }}>
+                    <WavyBackground
+                        height={200}
+                        width={1100}
+                        amplitude={20}
+                        frequency={0.5}
+                        offset={150}
+                        color="#1F618D"
+                        
+                    />
+                </View>
                 <View style={{
                     backgroundColor: 'white',
                     width: 220, height: 220,
                     borderRadius: 220 / 2,
                     position: 'absolute',
-                    top: 120,
+                    top: 60,
                     left: windowWidth / 4 - 10,
                 }} />
 
@@ -44,7 +62,7 @@ const Profile = () => {
                     source={require('../images/john.jpg')}
                     style={{
                         width: 200, height: 200, borderRadius: 200 / 2,
-                        top: windowHeight / 6,
+                        top: windowHeight / 11,
                         left: windowWidth / 4,
                     }}
                 />
@@ -67,7 +85,7 @@ const Profile = () => {
                         <Text style={styles.subHeader}>  {data.gender}</Text>
                     </View>
                     <Divider />
-                    <View style={{ flexDirection: 'row', margin: 10, justifyContent:'space-around' }}>
+                    <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-around' }}>
                         <MaterialCommunityIcons name="human-male-height" size={26} color="black" />
                         <TextInput
                             style={styles.subHeader}
@@ -85,9 +103,9 @@ const Profile = () => {
                             onChangeText={(text) => setData({ ...data, height: text })}
                         />
                         <Text style={styles.subHeader}>cm</Text>
-                        
-                            <Button title={editable ? 'Save' : 'Edit'} onPress={() => setEditable(!editable)} />
-                      
+
+                        <Button title={editable ? 'Save' : 'Edit'} onPress={() => setEditable(!editable)} />
+
                     </View>
                     <Divider />
 

@@ -1,21 +1,54 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import WaterIcon_ from './WaterIcon_'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ListItem , Dialog} from '@rneui/themed'
+import { ListItem, Dialog } from '@rneui/themed'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Cup from './Cup'
 
 
+let dailyCount = 0;
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const Daily = () => {
     const [icons, setIcons] = useState([]);
+    const [data, setData] = useState([]);
+    const [daily, setDrink] = useState([]);
+
+    
+
+
+    useEffect(() => {
+        fetch('https://water-bottle.herokuapp.com/get/John')
+            .then(response => response.json())
+            .then(result => {
+                if (result && result.Result && result.Result.John && result.Result.John.amountToDrink) {
+                    setData(result.Result.John.amountToDrink);
+                    console.log(result.Result.John.amountToDrink);
+                }
+            })
+            .catch(error => console.error(error));
+    }, []);
+    useEffect(() => {
+        fetch('https://water-bottle.herokuapp.com/get/John')
+            .then(response => response.json())
+            .then(result => {
+                setDrink(result.Result.John.daily);
+                console.log(daily);
+            })
+            .catch(error => console.error(error));
+    }, []);
+
+   
+
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (icons.length < 8) {
-                const newIcon = icons.length < 6
+                const newIcon = icons.length < 5
                     ? <MaterialCommunityIcons name="cup" color='white' style={{ fontSize: 40, marginTop: 20, marginLeft: 4 }} />
                     : <MaterialCommunityIcons name="cup" color='white' style={{ fontSize: 40, marginTop: 20, marginLeft: 4, opacity: 0.6 }} />;
                 setIcons(prevIcons => [...prevIcons, newIcon]);
@@ -65,7 +98,7 @@ const Daily = () => {
                     <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 5 }}>
                         <Text style={{ color: 'white' }}>Saturday</Text>
                         <Text style={{ fontSize: 22, color: 'white' }}>1.7L / 6 glasses</Text>
-                        <Text style={{ color: 'white' }}>2 glasses left</Text>
+                        <Text style={{ color: 'white' }}>{dailyCount} glasses left</Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -75,23 +108,45 @@ const Daily = () => {
                         </View>
                     ))}
                 </View>
-                <ScrollView>
-                    {thisDay.map((item) => (
-                        <ListItem
-                            containerStyle={{ backgroundColor: '#4985b1' }}
-                            key={item.glass}
-                            bottomDivider
-                        >
-                            <Cup></Cup>
-                            <ListItem.Content>
-                                <ListItem.Subtitle style={{ color: 'white' }}>{item.glass}</ListItem.Subtitle>
-                                <ListItem.Title style={{ color: 'white' }}>  {item.time}</ListItem.Title>
-                                <ListItem.Subtitle style={{ color: 'white' }}>{item.left}</ListItem.Subtitle>
-                            </ListItem.Content>
+                <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                        <ScrollView style={{ flex: 1, height: '100%' }}>
+                        {Object.entries(data).map(([key, value]) => (
+                                <ListItem
+                                    containerStyle={{ backgroundColor: '#4985b1' }}
+                                    key={key}
+                                    bottomDivider
+                                >
+                                    <Cup></Cup>
+                                    <ListItem.Content>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{key} glasses</ListItem.Subtitle>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{value.time}</ListItem.Subtitle>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{value.drink}</ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            ))}
+                        </ScrollView>
+                        <ScrollView style={{ flex: 1, height: '100%' }}>
+                            
+                        {Object.entries(data).map(([key, value]) => (
+                                <ListItem
+                                    containerStyle={{ backgroundColor: '#4985b1' }}
+                                    key={key}
+                                    bottomDivider
+                                >
+                                   
+                                    <ListItem.Content>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{key} glasses</ListItem.Subtitle>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{value.time}</ListItem.Subtitle>
+                                        <ListItem.Subtitle style={{ color: 'white' }}>{value.drink}</ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            ))}
 
-                        </ListItem>
-                    ))}
-                </ScrollView>
+                        </ScrollView>
+                    </View>
+                </View>
+
             </View>
         </View>
     )
