@@ -11,6 +11,8 @@ import { LinearGradient } from 'react-native-svg';
 import Dialog from "react-native-dialog";
 import axios from 'axios';
 import moment from 'moment';
+import { Image } from 'react-native';
+
 
 let glass = 0;
 let maxGlasses = 8;
@@ -22,19 +24,19 @@ const Show = () => {
     useEffect(() => {
         // Update the current time every second
         const interval = setInterval(() => {
-          setCurrentTime(moment().format('hh:mm A'));
+            setCurrentTime(moment().format('hh:mm A'));
         }, 1000);
-    
+
         // Calculate the time remaining until 11:00 PM
         const endTime = moment('24:00:00', 'HH:mm:ss');
         const duration = moment.duration(endTime.diff(moment()));
         const hoursLeft = Math.floor(duration.asHours());
         const minutesLeft = Math.floor(duration.asMinutes() % 60);
         setTimeRemaining(`${hoursLeft} hours and ${minutesLeft} minutes left`);
-    
+
         // Clear the interval when the component unmounts
         return () => clearInterval(interval);
-      }, []);
+    }, []);
 
     const [data, setData] = useState(null)
     useEffect(() => {
@@ -47,9 +49,46 @@ const Show = () => {
             .catch(error => console.error(error));
     }, []);
     dailyCount = data ? Object.keys(data.daily).length : 0;
+    const [pic, setPic] = useState('zero')
+
+
+    switch (dailyCount) {
+        case 0:
+            var imageSource = require('../icon/0.png');
+            break;
+        case 1:
+            var imageSource = require('../icon/1.png');
+            break;
+        case 2:
+            var imageSource = require('../icon/2.png');
+            break;
+        case 3:
+            var imageSource = require('../icon/3.png');
+            break;
+        case 4:
+            var imageSource = require('../icon/4.png');
+            break;
+        case 5:
+            var imageSource = require('../icon/5.png');
+            break;
+        case 6:
+            var imageSource = require('../icon/6.png');
+            break;
+        case 7:
+            var imageSource = require('../icon/7.png');
+            break;
+        default:
+            var imageSource = require('../icon/8.png');
+    }
     return (
         <View style={styles.topPosition}>
-            <Ionicons name="water-outline" style={{ fontSize: 225, color: '#008fc8', marginTop: 40, }}></Ionicons>
+            <View style={{ marginTop: 60 }}>
+                <Image
+                    source={imageSource}
+
+                />
+            </View>
+
             <Text style={styles.Text}> {dailyCount} / {maxGlasses} glasses    </Text>
             <Text style={styles.Text}> {timeRemaining}</Text>
 

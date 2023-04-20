@@ -87,7 +87,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <MyTabs /> 
-      
     </NavigationContainer>
   );
 }

@@ -21,7 +21,7 @@ const App = () => {
     setTimeout(() => {
       PushNotification.localNotification({
         channelId: 'channel-id',
-        title: 'My Notification Title',
+        title: 'SmartWater-Project',
         message: 'Are you tirtsy? relax and take some dirnk!',
         largeIconUrl: 'file://C:/react/smartBottle/icon/icon.png', // add the path to your icon here
       });

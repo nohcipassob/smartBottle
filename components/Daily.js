@@ -7,7 +7,7 @@ import { ListItem, Dialog } from '@rneui/themed'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Cup from './Cup'
 import { useIsFocused } from '@react-navigation/native';
-
+import { Image } from 'react-native';
 let maxGlasses = 8
 let dailyCount = 0;
 const wait = (timeout) => {
@@ -74,39 +74,49 @@ const Daily = () => {
 
     const drunkValues = Object.values(daily).map(item => item.drunk);
     const totalDrunk = drunkValues.reduce((acc, curr) => acc + curr, 0);
-    
+    dailyCount = data ? Object.keys(daily).length : 0;
     console.log(totalDrunk); // 881
 
-    const thisDay = [
-        {
-            "glass": "1st glass",
-            "time": "9.00 AM",
-            "left": "7 glasses left"
-        },
-        {
-            "glass": "2nd glass",
-            "time": "9.45 AM",
-            "left": "6 glasses left"
-        },
-        {
-            "glass": "3rd glass",
-            "time": "11.24 AM",
-            "left": "5 glasses left"
-        },
-        {
-            "glass": "4th glass",
-            "time": "12.30 PM",
-            "left": "4 glasses left"
-        }
-    ]
+    switch (dailyCount) {
+        case 0:
+            var imageSource = require('../icon/20.png');
+            break;
+        case 1:
+            var imageSource = require('../icon/21.png');
+            break;
+        case 2:
+            var imageSource = require('../icon/22.png');
+            break;
+        case 3:
+            var imageSource = require('../icon/23.png');
+            break;
+        case 4:
+            var imageSource = require('../icon/24.png');
+            break;
+        case 5:
+            var imageSource = require('../icon/25.png');
+            break;
+        case 6:
+            var imageSource = require('../icon/26.png');
+            break;
+        case 7:
+            var imageSource = require('../icon/27.png');
+            break;
+        default:
+            var imageSource = require('../icon/28.png');
+    }
     return (
         <View style={styles.container}>
             <View style={styles.top}>
                
                 <View style={styles.topPosition}>
-                    <Ionicons name="water-outline" style={[styles.center, { fontSize: 225, color: 'white', marginTop: 40 }]}></Ionicons>
+                <View style={{marginTop: 60}}>
+                <Image
+                    source={imageSource}
+                />
                 </View>
-                <View style={{ flexDirection: 'row', marginLeft: 20 }}>
+                </View>
+                <View style={{ flexDirection: 'row', marginLeft: 20, marginTop:20 }}>
                     <WaterIcon_ />
                     <View style={{ flexDirection: 'column', marginLeft: 10, marginTop: 5 }}>
                         <Text style={{ color: 'white' }}>{dayOfWeek}</Text>
